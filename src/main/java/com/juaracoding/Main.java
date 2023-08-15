@@ -129,6 +129,9 @@ public class Main {
             System.out.println("False");
         }
 
+        // Tutup driver
+        driver.quit();
+
     }
     public static void delay(long sec){
         try {
