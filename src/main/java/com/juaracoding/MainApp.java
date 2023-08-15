@@ -24,14 +24,14 @@ public class MainApp {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         System.out.println("Dashboard");
 
-//        kelolaIzin(driver); // kalau appnya di Hapus data, atau
-        delay(5); // manual aja
+//        kelolaIzin(driver); // ini kalau appnya di Hapus data pakai ini, atau
+        delay(5); // ini yg manual aja
         // ======================== Transaksi Kredit ================== //
         tambahTransaksi(driver);
 
         pilihJenisTransaksi(driver,"Pengeluaran");
 
-        transaksi(driver, "30000", "Beli makan siang");
+        transaksi(driver, "1","30000", "Beli makan siang");
 
         delay(5);
 
@@ -40,7 +40,7 @@ public class MainApp {
 
         pilihJenisTransaksi(driver,"Pemasukan");
 
-        transaksi(driver, "2000000", "Gajian Agustus 2023");
+        transaksi(driver, "3","2000000", "Gajian Agustus 2023");
 
         delay(5);
 
@@ -101,7 +101,7 @@ public class MainApp {
                 break;
         }
     }
-    public static void transaksi(AndroidDriver driver, String jumlah, String keterangan){
+    public static void transaksi(AndroidDriver driver, String idxKategori, String jumlah, String keterangan){
         //Halaman Buat Transaksi
         MobileElement inputKalender = (MobileElement) driver.findElementById("com.chad.financialrecord:id/tvDate");
         inputKalender.click();
@@ -111,7 +111,7 @@ public class MainApp {
 
         MobileElement inputKategori = (MobileElement) driver.findElementById("com.chad.financialrecord:id/tvName");
         inputKategori.click();
-        String kategori = "/hierarchy//android.widget.LinearLayout[1]//android.widget.TextView";
+        String kategori = "/hierarchy//android.widget.LinearLayout["+ idxKategori +"]//android.widget.TextView";
         MobileElement pilihKategori = (MobileElement) driver.findElementByXPath(kategori);
         pilihKategori.click();
         System.out.println("Input kategori");
