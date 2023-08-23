@@ -19,13 +19,20 @@ public class MainApp {
         dc.setCapability("noReset", true);
         URL url = new URL("http://127.0.0.1:4723/wd/hub");
         AndroidDriver driver = new AndroidDriver(url, dc);
-        System.out.println("Appium Online");
+        System.out.println("Appium is Online");
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         System.out.println("Dashboard");
 
-//        kelolaIzin(driver); // ini kalau appnya di Hapus data pakai ini, atau
-        delay(5); // ini yg manual aja
+        boolean isAccept = kelolaIzin(driver);
+        if (isAccept) {
+            //kalau pakai izin
+            delay(3);
+        } else {
+            //kalau ga pakai izin
+            delay(5);
+        }
+
         // ======================== Transaksi Kredit ================== //
         tambahTransaksi(driver);
 
@@ -58,7 +65,7 @@ public class MainApp {
         driver.quit();
         System.out.println("Exit");
     }
-    public static void kelolaIzin(AndroidDriver driver){
+    public static boolean kelolaIzin(AndroidDriver driver){
         try {
             String izin = "com.android.packageinstaller:id/permission_allow_button";
             MobileElement izinkan = (MobileElement) driver.findElementById(izin);
@@ -76,19 +83,23 @@ public class MainApp {
                 System.out.println("Tombol pencadangan tidak ditemukan.");
             }
         } catch (Exception e) {
-            driver.quit();
-            System.out.println("Terjadi kesalahan saat mencoba mengklik tombol Izinkan: " + e.getMessage());
+            System.out.println("Izin false");
+            return false;
         }
+        System.out.println("Izin true");
+        return true;
     }
     public static void tambahTransaksi(AndroidDriver driver){
-        MobileElement btnTambahTransaksi = (MobileElement) driver.findElementById("com.chad.financialrecord:id/fabMenu");
+        MobileElement btnTambahTransaksi = (MobileElement) driver
+                .findElementById("com.chad.financialrecord:id/fabMenu");
         btnTambahTransaksi.click();
         System.out.println("Tambah Transaksi");
     }
     public static void pilihJenisTransaksi(AndroidDriver driver, String jenis){
         switch (jenis){
             case "Pemasukan":
-                MobileElement tabDeposit = (MobileElement) driver.findElementById("com.chad.financialrecord:id/btnIncome");
+                MobileElement tabDeposit = (MobileElement) driver
+                        .findElementById("com.chad.financialrecord:id/btnIncome");
                 tabDeposit.click();
                 System.out.println("Pindah ke pemasukan");
                 break;
@@ -128,9 +139,11 @@ public class MainApp {
         btnSimpan.click();
         System.out.println("Simpan");
 
-        //============verifikasi ===========//
+        //============ verifikasi ===========//
         //Di halaman Dashboard
-        String hasil = "/hierarchy//android.view.ViewGroup[2]//android.widget.ExpandableListView/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.TextView[2]";
+        // gak bisa lebih pendek dari ini, bisa error nanti ↓
+        String hasil = "/hierarchy//android.view.ViewGroup[2]//android.widget.ExpandableListView/" +
+                "android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.TextView[2]";
         MobileElement listDashboard = (MobileElement) driver.findElementByXPath(hasil);
 
         String actual = listDashboard.getText();
